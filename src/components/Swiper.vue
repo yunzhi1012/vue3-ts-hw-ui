@@ -34,6 +34,10 @@ const props = defineProps({
     type: Array<string>,
     required: true
   },
+  autoPlay: {
+    type: String,
+    default: "true"
+  }
 })
 
 const moveXList = ref<number[]>([])
@@ -56,9 +60,11 @@ function init() {
     moveXList.value.push(i * swiperWidth * (-1))
   }
   moveXList.value[0] = 0
-  time = setInterval(() => {
-    autoPlaySwiper()
-  }, 2500)
+  if (props.autoPlay == 'true') {
+    time = setInterval(() => {
+      autoPlaySwiper()
+    }, 2500)
+  }
 }
 // 自动播放
 function autoPlaySwiper() {
@@ -85,7 +91,7 @@ function getCurImgIndex(): number {
 
 // 点击前进后退滚动
 function swiperByArrow(type: number) {
-  if (time !== null) {
+  if (props.autoPlay == 'true' && time !== null) {
     clearInterval(time)
     time = setInterval(() => {
       autoPlaySwiper()
@@ -106,7 +112,7 @@ function swiperByArrow(type: number) {
 }
 // 点击分页器滚动
 function swiperByPage(targetIndex: number) {
-  if (time !== null) {
+  if (props.autoPlay == 'true' && time !== null) {
     clearInterval(time)
     time = setInterval(() => {
       autoPlaySwiper()
