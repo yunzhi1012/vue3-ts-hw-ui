@@ -30,13 +30,22 @@
 // 子组件
 import { ref, onMounted, defineProps } from 'vue'
 const props = defineProps({
+  /**
+   * @imgList 图片列表
+   * @autoPlay 是否自动轮播
+   * @playTime 每张图片轮播时长，单位毫秒
+   */
   imgList: {
     type: Array<string>,
     required: true
   },
   autoPlay: {
-    type: String,
-    default: "true"
+    type: Boolean,
+    default: true
+  },
+  playTime: {
+    type: Number,
+    default: 3000
   }
 })
 
@@ -60,10 +69,10 @@ function init() {
     moveXList.value.push(i * swiperWidth * (-1))
   }
   moveXList.value[0] = 0
-  if (props.autoPlay == 'true') {
+  if (props.autoPlay) {
     time = setInterval(() => {
       autoPlaySwiper()
-    }, 2500)
+    }, props.playTime)
   }
 }
 // 自动播放
@@ -91,11 +100,11 @@ function getCurImgIndex(): number {
 
 // 点击前进后退滚动
 function swiperByArrow(type: number) {
-  if (props.autoPlay == 'true' && time !== null) {
+  if (props.autoPlay && time !== null) {
     clearInterval(time)
     time = setInterval(() => {
       autoPlaySwiper()
-    }, 2500)
+    }, props.playTime)
   }
   const lastTranslateX = swiperWidth * (props.imgList.length - 1) * (-1)
   let translateX: number = 0, dis = null
@@ -112,11 +121,11 @@ function swiperByArrow(type: number) {
 }
 // 点击分页器滚动
 function swiperByPage(targetIndex: number) {
-  if (props.autoPlay == 'true' && time !== null) {
+  if (props.autoPlay && time !== null) {
     clearInterval(time)
     time = setInterval(() => {
       autoPlaySwiper()
-    }, 2500)
+    }, props.playTime)
   }
   let curIndex = getCurImgIndex()
   let dis = moveXList.value[targetIndex]

@@ -12,7 +12,7 @@ const imgList = ref([
 </script>
 
 <template>
-  <Swiper :imgList="imgList" />
+  <Swiper :imgList="imgList" :playTime=3000 />
 </template>
 
 <style scoped></style>
