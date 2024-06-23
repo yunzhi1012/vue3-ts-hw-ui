@@ -34,6 +34,8 @@ const props = defineProps({
    * @imgList 图片列表
    * @autoPlay 是否自动轮播
    * @playTime 每张图片轮播时长，单位毫秒
+   * @width 盒子宽度
+   * @height 盒子高度
    */
   imgList: {
     type: Array<string>,
@@ -46,24 +48,33 @@ const props = defineProps({
   playTime: {
     type: Number,
     default: 3000
-  }
+  },
+  width: {
+    type: Number,
+    default: 800
+  },
+  height: {
+    type: Number,
+    default: 500
+  },
 })
 
 const moveXList = ref<number[]>([])
 const swiperContainer = ref<null | HTMLDivElement>(null)
 const imgBoxContainer = ref<null | HTMLDivElement>(null)
 const pageContainer = ref<null | HTMLDivElement>(null)
-let swiperWidth = 0
+let swiperWidth = Number(props.width)
 let time: null | number = null;
 
 onMounted(() => {
   init()
 })
-
+// 初始化操作
 function init() {
   // 获取容器宽度
   if (swiperContainer.value) {
-    swiperWidth = swiperContainer.value.offsetWidth
+    swiperContainer.value.style.width = `${props.width}px`
+    swiperContainer.value.style.height = `${props.height}px`
   }
   for (let i = 0; i < props.imgList.length; i++) {
     moveXList.value.push(i * swiperWidth * (-1))
@@ -75,6 +86,7 @@ function init() {
     }, props.playTime)
   }
 }
+
 // 自动播放
 function autoPlaySwiper() {
   let curIndex = getCurImgIndex()
@@ -119,6 +131,7 @@ function swiperByArrow(type: number) {
   imgBoxContainer.value!.style.transform = `translateX(${dis}px)`;
   changePageStyle(curIndex, targetIndex)
 }
+
 // 点击分页器滚动
 function swiperByPage(targetIndex: number) {
   if (props.autoPlay && time !== null) {
@@ -132,6 +145,7 @@ function swiperByPage(targetIndex: number) {
   imgBoxContainer.value!.style.transform = `translateX(${dis}px)`;
   changePageStyle(curIndex, targetIndex)
 }
+
 // 改变分页器样式
 function changePageStyle(curIndex: number, targetIndex: number) {
   if (curIndex == -1 || targetIndex == -1) return
@@ -157,7 +171,6 @@ function changePageStyle(curIndex: number, targetIndex: number) {
     height: 100%;
     display: flex;
     position: relative;
-    // transform: translateX(-800px);
     transition: transform 0.5s ease-in-out;
   }
 
